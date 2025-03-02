@@ -8,6 +8,9 @@ ENDCOLOR="\e[0m"
 TICK="\xE2\x9C\x94"
 CROSS="\xE2\x9D\x8C"
 
+# Load environment variables
+set -a ; . ./.env ; set +a
+
 show_operation_status() {
   CURRENT_RESULT=${1}
   OPERATION=${2}
@@ -27,7 +30,7 @@ if [ "$1" == "up" ]; then
   exit ${RESULT}
 elif [ "$1" == "down" ]; then
   echo -e "${BLUE}Backup database...${ENDCOLOR}"
-  docker exec db /usr/bin/mysqldump --user=root --password=password exampledb > ./dump.sql
+  docker exec db sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' > ./dump.sql
   RESULT=$?
   show_operation_status ${RESULT} "Backup"
   echo -e "${BLUE}Stopping Wordpress docker-compose...${ENDCOLOR}"
@@ -37,13 +40,13 @@ elif [ "$1" == "down" ]; then
   exit ${RESULT}
 elif [ "$1" == "backup" ]; then
   echo -e "${BLUE}Backup database...${ENDCOLOR}"
-  docker exec db /usr/bin/mysqldump --user=root --password=password exampledb > ./backup.sql
+  docker exec db sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' > ./dump.sql
   RESULT=$?
   show_operation_status ${RESULT} "Backup"
   exit ${RESULT}
 elif [ "$1" == "restore" ]; then
   echo -e "${BLUE}Restore database...${ENDCOLOR}"
-  docker exec db /usr/bin/mysql --user=root --password=password exampledb < ./backup.sql
+  docker exec db sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' < ./dump.sql
   RESULT=$?
   show_operation_status ${RESULT} "Restore"
   exit ${RESULT}

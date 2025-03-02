@@ -48,4 +48,9 @@
 # uncomment the next line
 #/wp-content/themes
 
+# Environment files
+.env
+.env.*
+!.env.example
+
 .DS_Store

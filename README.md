@@ -17,6 +17,12 @@ Make the script executable:
 chmod +x wp-dev.sh
 ```
 
+Copy the example environment file and customize it:
+```bash
+cp .env.example .env
+```
+Edit the `.env` file to set your own database credentials and other configurations.
+
 ## Available scripts
 The `wp-dev.sh` script provides several commands to manage your local Wordpress environment:
 
@@ -46,4 +52,4 @@ This command restores the database from the backup file.
 
 ## Notes
 - Ensure Docker and Docker-compose are installed and running on your system. Personally I use [Rancher Desktop](https://rancherdesktop.io/).
-- Modify the database credentials and other configurations in the `wp-dev.sh` script as needed.
+- Modify the database credentials and other configurations in the `.env` file as needed.
