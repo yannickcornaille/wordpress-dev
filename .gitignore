@@ -53,4 +53,7 @@
 .env.*
 !.env.example
 
+# Database files
+/dumps/*.sql
+
 .DS_Store

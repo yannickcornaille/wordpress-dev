@@ -32,9 +32,10 @@ if [ "$1" == "up" ]; then
   exit ${RESULT}
 elif [ "$1" == "down" ]; then
   echo -e "${BLUE}Backup database...${ENDCOLOR}"
-  docker exec db sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' > ./dump.sql
+  DUMP_FILE="${MYSQL_DATABASE}_$(date +"%Y-%m-%d_%Hh%Mm%Ss").sql"
+  docker exec db sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' > "./dumps/$DUMP_FILE"
   RESULT=$?
-  show_operation_status ${RESULT} "Backup"
+  show_operation_status ${RESULT} "Backup ${DUMP_FILE}"
   echo -e "${BLUE}Stopping Wordpress docker-compose...${ENDCOLOR}"
   docker-compose down
   RESULT=$?
@@ -42,16 +43,26 @@ elif [ "$1" == "down" ]; then
   exit ${RESULT}
 elif [ "$1" == "backup" ]; then
   echo -e "${BLUE}Backup database...${ENDCOLOR}"
-  docker exec db sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' > ./dump.sql
+  DUMP_FILE="${MYSQL_DATABASE}_$(date +"%Y-%m-%d_%Hh%Mm%Ss").sql"
+  docker exec db sh -c 'exec mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' > "./dumps/$DUMP_FILE"
   RESULT=$?
-  show_operation_status ${RESULT} "Backup"
+  show_operation_status ${RESULT} "Backup ${DUMP_FILE}"
   exit ${RESULT}
 elif [ "$1" == "restore" ]; then
-  echo -e "${BLUE}Restore database...${ENDCOLOR}"
-  docker exec db sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' < ./dump.sql
-  RESULT=$?
-  show_operation_status ${RESULT} "Restore"
-  exit ${RESULT}
+  echo -e "${BLUE}Available dump files:${ENDCOLOR}"
+  ls ./dumps/
+  echo -e "${BLUE}Enter the name of the dump file to restore:${ENDCOLOR}"
+  read DUMP_FILE
+  if [ -f "./dumps/$DUMP_FILE" ]; then
+    echo -e "${BLUE}Restoring database from $DUMP_FILE...${ENDCOLOR}"
+    docker exec db sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' < "./dumps/$DUMP_FILE"
+    RESULT=$?
+    show_operation_status ${RESULT} "Restore ${DUMP_FILE}"
+    exit ${RESULT}
+  else
+    echo -e "${RED}${CROSS} Dump file not found${ENDCOLOR}"
+    exit 1
+  fi
 else
   echo -e "${RED}${CROSS} Invalid argument${ENDCOLOR}"
   exit 1
