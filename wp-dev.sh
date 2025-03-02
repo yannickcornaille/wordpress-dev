@@ -55,7 +55,7 @@ elif [ "$1" == "restore" ]; then
   read DUMP_FILE
   if [ -f "./dumps/$DUMP_FILE" ]; then
     echo -e "${BLUE}Restoring database from $DUMP_FILE...${ENDCOLOR}"
-    docker exec db sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' < "./dumps/$DUMP_FILE"
+    docker exec -i db sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE"' < "./dumps/$DUMP_FILE"
     RESULT=$?
     show_operation_status ${RESULT} "Restore ${DUMP_FILE}"
     exit ${RESULT}
