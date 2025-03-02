@@ -1,6 +1,9 @@
 # wordpress-dev
 A local/development Wordpress environment to peacefully prepare your future website.
 
+A need to develop your WordPress site without updating your production environment, visible to all, and you do not have a test/staging environment with your web hosting.
+Use this repository to run a local environment with Docker, and once ready, put your site online thanks to the included database backup feature and the wordpress folder.
+
 ## Prerequisites
 - Docker
 - Docker-compose
