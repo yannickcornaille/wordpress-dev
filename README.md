@@ -33,7 +33,9 @@ The `wp-dev.sh` script provides several commands to manage your local Wordpress 
 ```bash
 ./wp-dev.sh up
 ```
-This command starts the Wordpress environment using Docker-compose.
+This command starts the Wordpress environment using Docker-compose.  
+Visit [http://localhost:8080](http://localhost:8080) to view your WordPress.  
+Visit [http://localhost:8180](http://localhost:8180) to view the phpMyAdmin interface.
 
 ### Stop the environment and backup the database
 ```bash
