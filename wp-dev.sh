@@ -27,6 +27,8 @@ if [ "$1" == "up" ]; then
   docker-compose up -d
   RESULT=$?
   show_operation_status ${RESULT} "Starting"
+  echo -e "${BLUE}WordPress is available here: http://localhost:8080/${ENDCOLOR}"
+  echo -e "${BLUE}phpMyAdmin is available here: http://localhost:8180/${ENDCOLOR}"
   exit ${RESULT}
 elif [ "$1" == "down" ]; then
   echo -e "${BLUE}Backup database...${ENDCOLOR}"
